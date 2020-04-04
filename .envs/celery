@@ -1,0 +1,7 @@
+# FLOWER
+CELERY_FLOWER_USER=flower
+CELERY_FLOWER_PASSWORD=flower
+
+# CELERY
+CELERY_BROKER_URL=amqp://rabbitmq:rabbitmq@rabbitmq:5672
+CELERY_RESULT_BACKEND_URL=redis://redis:6379

@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db:
+    user: '!!!Put result of `echo ${UID}` here!!!'
+
+  app: &app
+    build:
+      args:
+        # Pass the host user id in, so the `Dockerfile` can create a user
+        # with the same `UID`, solving permissions problems on Linux
+        USER_ID: '!!!Put result of `echo ${UID}` here!!!'
+    user: '!!!Put result of `echo ${UID}` here!!!'
+
+  celeryworker:
+    <<: *app
+
+  celeryflower:
+    <<: *app

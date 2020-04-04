@@ -1,0 +1,70 @@
+---
+version: '3.7'
+
+services:
+  db:
+    image: postgres:latest
+    volumes:
+      - hack_yeah2020-postgresql:/var/lib/postgresql/data
+    env_file:
+      - .envs/postgresql
+    environment:
+      # set `${PGDATA}` to a subdirectory because PostgreSQL needs this
+      # directory to be empty and there is already `.gitkeep` file there
+      - PGDATA=/var/lib/postgresql/data/postgresql_data
+
+  app: &app
+    container_name: hack_yeah2020-app
+    build:
+      target: development_build
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .envs/general
+      - .envs/flask
+      - .envs/celery
+      - .envs/postgresql
+    volumes:
+      - ./backend:/app
+      - ./shared/media:/app/shared/media
+      - ./shared/static:/app/shared/static
+      - ./shared/templates:/app/shared/templates
+
+  rabbitmq:
+    image: rabbitmq:3.7-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - .envs/rabbitmq
+    volumes:
+      - hack_yeah2020-rabbitmq:/var/lib/rabbitmq
+
+  redis:
+    image: redis:latest
+
+  celeryworker:
+    <<: *app
+    container_name: hack_yeah2020-celeryworker
+    depends_on:
+      - rabbitmq
+      - redis
+    ports: []
+    command: /start_celeryworker.sh
+
+  celeryflower:
+    <<: *app
+    container_name: hack_yeah2020-celeryflower
+    depends_on:
+      - rabbitmq
+    ports:
+      - "5555:5555"
+    command: /start_celeryflower.sh
+
+volumes:
+  hack_yeah2020-rabbitmq:
+  hack_yeah2020-postgresql:

@@ -1,0 +1,11 @@
+# POSTGRESQL specific
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+# CONN_MAX_AGE=60
+
+# GENERAL
+FLASK_SETTINGS_MODULE=config.settings.local
+FLASK_APP=apps.application
+FLASK_DEBUG=True
+FLASK_ENN=development
+FLASK_SECRET_KEY=123super_secret_value987
