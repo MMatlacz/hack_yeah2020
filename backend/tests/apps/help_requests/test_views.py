@@ -111,7 +111,7 @@ class TestHelpRequestListView:
             'address': 'Koszykowa 75, 00-662 Warszawa',
             'name': 'Anonim z MiNI',
             'products': '2 zeszyty, 1 gługis, 10 batonów Snickers',
-            'phone_number': '+48 22 621 93 12',
+            'phone_number': '+48 22 62 1 93 1 2',
             'call_time': '04:09 min, today',
             'pickup_time': (
                 'dzisiaj wieczorem po 19:35, ale nie pózniej niz o 21:21'
@@ -136,7 +136,7 @@ class TestHelpRequestListView:
             id=response.json['data']['id'],
         ).one()
         assert help_request.products == help_request_data['products']
-        assert help_request.full_name == help_request_data['name']
+        assert help_request.phone_number == '+48226219312'
         assert help_request.address == geocoding_result.address
         assert help_request.latitude == geocoding_result.latitude
         assert help_request.longitude == geocoding_result.longitude

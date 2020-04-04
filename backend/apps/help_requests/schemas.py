@@ -59,6 +59,10 @@ class HelpRequestCreateSchema(schemas.Schema):
         data.update(
             geolocation_from(data['address'])._asdict(),  # noqa: WPS437
         )
+        data['phone_number'] = ''.join(
+            char for char in data['phone_number']
+            if char.isdigit() or char == '+'
+        )
         return data
 
 
