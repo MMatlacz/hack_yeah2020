@@ -1,3 +1,5 @@
+from marshmallow import fields
+
 from ..extensions import schemas
 from . import models
 
@@ -7,11 +9,12 @@ class HelpRequestSchema(schemas.ModelSchema):
         model = models.HelpRequest
         fields = (
             'id',
-            'first_name',
-            'last_name',
+            'full_name',
             'phone_number',
             'address',
-            'things',
+            'products',
+            'pickup_time',
+            'call_time',
             'finished_at',
             'accepted_at',
             'accepted_by',
@@ -20,11 +23,30 @@ class HelpRequestSchema(schemas.ModelSchema):
         )
         dump_only = (
             'id',
-            'first_name',
-            'last_name',
+            'created_at',
+            'updated_at',
+        )
+
+
+class HelpRequestCreateSchema(schemas.Schema):
+    address = fields.String(required=True)
+    full_name = fields.String(required=True, data_key='name')
+    products = fields.String(required=True)
+    call_time = fields.String(required=True, default='')
+    pickup_time = fields.String(required=True)
+    phone_number = fields.String(required=True)
+
+
+class HelpRequestPartialUpdateSchema(HelpRequestSchema):
+    class Meta(HelpRequestSchema.Meta):
+        dump_only = (
+            'id',
+            'full_name',
             'phone_number',
             'address',
-            'things',
+            'products',
+            'pickup_time',
+            'call_time',
             'created_at',
             'updated_at',
         )

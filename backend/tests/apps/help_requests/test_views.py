@@ -10,6 +10,8 @@ import pytest
 from flask_jwt_extended import create_access_token
 from freezegun import freeze_time
 
+from apps.help_requests import models
+
 
 @pytest.mark.flask_db
 class TestHelpRequestListView:
@@ -98,6 +100,33 @@ class TestHelpRequestListView:
         )
         assert help_request_ids == expected_help_request_ids
 
+    def test_post_returns_HTTP201_with_created_help_request_data(
+        self,
+        client,
+        user,
+    ):
+        help_request_data = {
+            'address': 'Koszykowa 75, 00-662 Warszawa',
+            'name': 'Anonim z MiNI',
+            'products': '2 zeszyty, 1 gługis, 10 batonów Snickers',
+            'phone_number': '+48 22 621 93 12',
+            'call_time': '04:09 min, today',
+            'pickup_time': (
+                'dzisiaj wieczorem po 19:35, ale nie pózniej niz o 21:21'
+            ),
+        }
+        response = client.post(
+            url_for(self.view_name, _external=False),
+            json=help_request_data,
+        )
+        assert response.status_code == HTTPStatus.CREATED
+        assert 'Location' in response.headers
+        help_request = models.HelpRequest.query.filter_by(
+            id=response.json['data']['id'],
+        ).one()
+        assert help_request.products == help_request_data['products']
+        assert help_request.full_name == help_request_data['name']
+
 
 @pytest.mark.flask_db
 class TestHelpRequestRetrieveUpdateView:
@@ -120,7 +149,7 @@ class TestHelpRequestRetrieveUpdateView:
         )
         assert response.status_code == HTTPStatus.OK
         assert response.json['data']['id'] == str(help_request.id)
-        assert response.json['data']['things'] == help_request.things
+        assert response.json['data']['products'] == help_request.products
         assert (
             response.json['data']['accepted_by']
             == str(help_request.accepted_by_id)

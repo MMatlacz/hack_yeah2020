@@ -4,11 +4,12 @@ from apps.common.factories import SQLAlchemyModelFactory
 
 
 class HelpRequestFactory(SQLAlchemyModelFactory):
-    first_name = factory.Faker('first_name')
-    last_name = factory.Faker('last_name')
+    full_name = factory.Faker('name')
     phone_number = factory.Faker('phone_number')
     address = factory.Faker('address')
-    things = factory.Faker('text')
+    products = factory.Faker('text')
+    pickup_time = factory.Faker('future_datetime')
+    call_time = factory.Faker('time')
     finished_at = None
     accepted_at = None
 
