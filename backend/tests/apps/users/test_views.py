@@ -33,7 +33,7 @@ class TestUserCreateView:
             json=user_schema_load_data,
         )
         assert response.status_code == HTTPStatus.CREATED
-        user_id = response.json['id']
+        user_id = response.json['data']['id']
         user = models.User.query.get(user_id)
         for field_name, field_value in user_schema_load_data.items():
             assert getattr(user, field_name) == field_value
@@ -50,7 +50,7 @@ class TestUserCreateView:
         assert response.status_code == HTTPStatus.CREATED
         assert (
             response.headers['Location'].endswith(
-                f'users/{response.json["id"]}',
+                f'users/{response.json["data"]["id"]}',
             )
         )
 
@@ -86,7 +86,7 @@ class TestUserRetrieveView:
             headers={'Authorization': f'Bearer {access_token}'},
         )
         assert response.status_code == HTTPStatus.OK
-        assert response.json['id'] == str(user.id)
+        assert response.json['data']['id'] == str(user.id)
 
     def test_get_returns_concrete_user_when_user_id_equal_to_uuid(
         self,
@@ -101,4 +101,4 @@ class TestUserRetrieveView:
             headers={'Authorization': f'Bearer {access_token}'},
         )
         assert response.status_code == HTTPStatus.OK
-        assert response.json['id'] == str(user.id)
+        assert response.json['data']['id'] == str(user.id)

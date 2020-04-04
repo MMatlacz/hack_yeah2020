@@ -13,3 +13,9 @@ class UserFactory(SQLAlchemyModelFactory):
 
     class Meta:
         model = 'apps.users.models.User'
+
+    @factory.post_generation
+    def accepted_help_requests(self, create, extracted, **kwargs):
+        if create and extracted:
+            for help_request in extracted:
+                self.accepted_help_requests.append(help_request)

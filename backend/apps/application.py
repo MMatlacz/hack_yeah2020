@@ -45,3 +45,5 @@ def _register_extensions(flask_app: flask.Flask) -> None:
     extensions.celery_extension.init_app(flask_app, celery_app)
     extensions.jwt.init_app(flask_app)
     extensions.socketio.init_app(flask_app)
+    extensions.admin.init_app(flask_app)
+    extensions.cors.init_app(flask_app)
