@@ -659,6 +659,18 @@ version = ">=5.0.0,<7.0.0"
 
 [[package]]
 category = "dev"
+description = "Let your Python tests travel through time"
+name = "freezegun"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "0.3.15"
+
+[package.dependencies]
+python-dateutil = ">=1.0,<2.0 || >2.0"
+six = "*"
+
+[[package]]
+category = "dev"
 description = "Git Object Database"
 name = "gitdb"
 optional = false
@@ -1511,7 +1523,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "a39f9328c8ead5ba8ae65418366027fd39fcb92ee714f47adbab49ec82712678"
+content-hash = "bd100e9495fccf1134ed5e5c013392ec3a270d0a816ebd9f59a8712f80218bf2"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1756,6 +1768,10 @@ flask-sqlalchemy = [
 flower = [
     {file = "flower-0.9.4-py2.py3-none-any.whl", hash = "sha256:616428951bd28c0463ce225331b22be1914f2240dec37ca7fabdb089ba46acec"},
     {file = "flower-0.9.4.tar.gz", hash = "sha256:25782840f7ffc25dcf478d94535a2d815448de4aa6c71426be6abfa9ca417448"},
+]
+freezegun = [
+    {file = "freezegun-0.3.15-py2.py3-none-any.whl", hash = "sha256:82c757a05b7c7ca3e176bfebd7d6779fd9139c7cb4ef969c38a28d74deef89b2"},
+    {file = "freezegun-0.3.15.tar.gz", hash = "sha256:e2062f2c7f95cc276a834c22f1a17179467176b624cc6f936e8bc3be5535ad1b"},
 ]
 gitdb = [
     {file = "gitdb-4.0.2-py3-none-any.whl", hash = "sha256:284a6a4554f954d6e737cddcff946404393e030b76a282c6640df8efd6b3da5e"},

@@ -15,11 +15,25 @@ class SQLAlchemyOptions(factory.alchemy.SQLAlchemyOptions):
             return getattr(factories_module, factory_class_name)
         return super().get_model_class()
 
+    @property
+    def sqlalchemy_session(self):
+        """``Flask-SQLAlchemy`` scoped session.
+
+        This is necessary to properly mock session in tests.
+        """
+        return db.session
+
+    def _build_default_options(self):
+        return [
+            option
+            for option in super()._build_default_options()
+            if option.name != 'sqlalchemy_session'
+        ]
+
 
 class SQLAlchemyModelFactory(factory.alchemy.SQLAlchemyModelFactory):
     _options_class = SQLAlchemyOptions
 
     class Meta:
         abstract = True
-        sqlalchemy_session = db.session
         sqlalchemy_session_persistence = 'commit'
