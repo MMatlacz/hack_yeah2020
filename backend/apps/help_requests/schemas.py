@@ -5,6 +5,11 @@ from . import models
 
 
 class HelpRequestSchema(schemas.ModelSchema):
+    products = fields.Method(
+        serialize='get_products',
+        deserialize='load_products',
+    )
+
     class Meta:
         model = models.HelpRequest
         fields = (
@@ -26,6 +31,13 @@ class HelpRequestSchema(schemas.ModelSchema):
             'created_at',
             'updated_at',
         )
+
+    def get_products(self, obj):  # noqa: WPS110
+        products = obj.products or ''
+        return products.split()
+
+    def load_products(self, value):  # noqa: WPS110
+        return str(value)
 
 
 class HelpRequestCreateSchema(schemas.Schema):

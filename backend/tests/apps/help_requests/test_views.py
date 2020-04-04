@@ -149,7 +149,9 @@ class TestHelpRequestRetrieveUpdateView:
         )
         assert response.status_code == HTTPStatus.OK
         assert response.json['data']['id'] == str(help_request.id)
-        assert response.json['data']['products'] == help_request.products
+        assert (
+            response.json['data']['products'] == help_request.products.split()
+        )
         assert (
             response.json['data']['accepted_by']
             == str(help_request.accepted_by_id)
