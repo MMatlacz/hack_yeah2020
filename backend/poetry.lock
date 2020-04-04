@@ -969,6 +969,14 @@ version = "4.8.0"
 ptyprocess = ">=0.5"
 
 [[package]]
+category = "main"
+description = "Python version of Google's common library for parsing, formatting, storing and validating international phone numbers."
+name = "phonenumbers"
+optional = false
+python-versions = "*"
+version = "8.12.1"
+
+[[package]]
 category = "dev"
 description = "Tiny 'shelve'-like database with concurrency support"
 name = "pickleshare"
@@ -1464,7 +1472,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "06931f93047fb06642651ec1666ed4f0524011a9536ba33315c2c770b6682689"
+content-hash = "4d0b250d88e0436863865f5e6cbdcac5ab5c97684535b2810b8b2a80a54f51a8"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1858,6 +1866,10 @@ pep8-naming = [
 pexpect = [
     {file = "pexpect-4.8.0-py2.py3-none-any.whl", hash = "sha256:0b48a55dcb3c05f3329815901ea4fc1537514d6ba867a152b581d69ae3710937"},
     {file = "pexpect-4.8.0.tar.gz", hash = "sha256:fc65a43959d153d0114afe13997d439c22823a27cefceb5ff35c2178c6784c0c"},
+]
+phonenumbers = [
+    {file = "phonenumbers-8.12.1-py2.py3-none-any.whl", hash = "sha256:bebf881ef0e775b93062fbd107bf164b5baef877a7b8f702e93a9a5d24ae4065"},
+    {file = "phonenumbers-8.12.1.tar.gz", hash = "sha256:59ae9cb25fb03027c9f2bf5584098e699be7eca12c443838b83752956be15cda"},
 ]
 pickleshare = [
     {file = "pickleshare-0.7.5-py2.py3-none-any.whl", hash = "sha256:9649af414d74d4df115d5d718f82acb59c9d418196b7b4290ed47a12ce62df56"},
