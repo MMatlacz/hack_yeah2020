@@ -1,3 +1,5 @@
+import datetime
+
 from http import HTTPStatus
 
 from flask import request
@@ -9,6 +11,7 @@ from flask_jwt_extended import (
 
 from apps.common.views import APIView
 from apps.common.wrappers.response import JSONResponse
+from apps.users.models import User
 
 from ..extensions import db
 from . import (
@@ -50,6 +53,16 @@ class HelpRequestRetrieveUpdateView(APIView):
             id=help_request_id,
         ).one()
         help_request_data = request.json
+        accepted_by = help_request_data.pop('accepted_by', '')
+        if accepted_by:
+            if accepted_by == 'self':
+                user = current_user
+            else:
+                user = User.query.filter_by(id=accepted_by).one()
+            help_request.accepted_by = user
+            help_request.accepted_at = datetime.datetime.now(
+                tz=datetime.timezone.utc,
+            )
         help_request = schemas.HelpRequestSchema().load(
             help_request_data,
             instance=help_request,

@@ -8,6 +8,7 @@ from flask import url_for
 import pytest
 
 from flask_jwt_extended import create_access_token
+from freezegun import freeze_time
 
 
 @pytest.mark.flask_db
@@ -170,4 +171,39 @@ class TestHelpRequestRetrieveUpdateView:
         assert (
             response.json['data']['finished_at']
             == finished_at.isoformat(timespec='seconds').split('+', 1)[0]
+        )
+
+    @pytest.mark.parametrize('help_request__accepted_by', [None])
+    def test_patch_returns_HTTP200_and_updates_accepted_at_when_accepted_by_updated(
+        self,
+        client,
+        user,
+        help_request,
+        help_request__accepted_by,
+    ):
+        datetime_now = datetime.datetime(
+            2020,
+            1,
+            1,
+            12,
+            47,
+            tzinfo=datetime.timezone.utc,
+        )
+        with freeze_time(datetime_now):
+            access_token = create_access_token(user)
+            response = client.patch(
+                url_for(
+                    self.view_name,
+                    help_request_id=str(help_request.id),
+                    _external=False,
+                ),
+                headers={'Authorization': f'Bearer {access_token}'},
+                json={'accepted_by': str(user.id)},
+            )
+        assert response.status_code == HTTPStatus.OK
+        assert response.json['data']['id'] == str(help_request.id)
+        assert response.json['data']['accepted_by'] == str(user.id)
+        assert (
+            response.json['data']['accepted_at']
+            == datetime_now.isoformat(timespec='seconds').split('+', 1)[0]
         )

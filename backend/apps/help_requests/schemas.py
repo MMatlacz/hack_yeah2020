@@ -25,4 +25,6 @@ class HelpRequestSchema(schemas.ModelSchema):
             'phone_number',
             'address',
             'things',
+            'created_at',
+            'updated_at',
         )
