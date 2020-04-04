@@ -44,3 +44,6 @@ class User(Timestampable, UUIDable):
         'apps.help_requests.models.HelpRequest',
         back_populates='accepted_by',
     )
+
+    def __str__(self) -> str:
+        return f'{self.first_name} {self.last_name} ({self.email})'
