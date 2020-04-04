@@ -7,7 +7,6 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy_utils import PhoneNumberType
 from typing_extensions import Final
 
 from apps.common.models import (
@@ -20,7 +19,7 @@ MAX_LENGTH: Final[int] = 255
 
 class HelpRequest(Timestampable, UUIDable):
     full_name = Column(String(length=MAX_LENGTH), nullable=False)
-    phone_number = Column(PhoneNumberType(region='PL', max_length=MAX_LENGTH))
+    phone_number = Column(String(length=MAX_LENGTH), nullable=False)
     address = Column(String(length=MAX_LENGTH), nullable=False)
     products = Column(Text, nullable=False)
     pickup_time = Column(String(length=MAX_LENGTH), nullable=False)
