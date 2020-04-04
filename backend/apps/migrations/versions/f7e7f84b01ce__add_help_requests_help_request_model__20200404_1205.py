@@ -36,7 +36,7 @@ def upgrade():
             nullable=True,
         ),
         sa.Column('address', sa.String(length=255), nullable=False),
-        sa.Column('things', sa.String(length=1020), nullable=False),
+        sa.Column('things', sa.Text(), nullable=False),
         sa.Column('finished_at', sa.DateTime(), nullable=True),
         sa.Column('accepted_at', sa.DateTime(), nullable=True),
         sa.PrimaryKeyConstraint('id')

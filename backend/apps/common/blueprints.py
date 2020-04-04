@@ -16,6 +16,7 @@ BLUEPRINT_RELATIVE_IMPORTS: Final = (
     ('.routing', '.consumers'),
     ('.hooks',),
     ('.exceptions',),
+    ('.admin', '.admins'),
 )
 SocketIOExceptionHandlerType = typing.Callable[[Exception], typing.Any]
 logger: logging.Logger = logging.getLogger(__name__)

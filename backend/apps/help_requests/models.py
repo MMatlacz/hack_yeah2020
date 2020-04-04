@@ -3,6 +3,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     String,
+    Text,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -22,7 +23,7 @@ class HelpRequest(Timestampable, UUIDable):
     last_name = Column(String(length=MAX_LENGTH), nullable=False)
     phone_number = Column(PhoneNumberType(region='PL', max_length=MAX_LENGTH))
     address = Column(String(length=MAX_LENGTH), nullable=False)
-    things = Column(String(length=(MAX_LENGTH * 4)), nullable=False)
+    things = Column(Text, nullable=False)
     finished_at = Column(DateTime, default=None, nullable=True)
     accepted_at = Column(DateTime, default=None, nullable=True)
 
