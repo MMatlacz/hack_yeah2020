@@ -3,7 +3,10 @@ import uuid
 
 from http import HTTPStatus
 
-from flask import url_for
+from flask import (
+    json,
+    url_for,
+)
 
 import pytest
 
@@ -128,7 +131,7 @@ class TestHelpRequestListView:
         )
         response = client.post(
             url_for(self.view_name, _external=False),
-            json=help_request_data,
+            data={'payload': json.dumps(help_request_data)},
         )
         assert response.status_code == HTTPStatus.CREATED
         assert 'Location' in response.headers

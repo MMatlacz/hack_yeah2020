@@ -3,6 +3,7 @@ import datetime
 from http import HTTPStatus
 
 from flask import (
+    json,
     request,
     url_for,
 )
@@ -46,7 +47,8 @@ class HelpRequestCreateListView(APIView):
         )
 
     def post(self) -> JSONResponse:
-        help_request_data = schemas.HelpRequestCreateSchema().load(request.json)
+        payload = json.loads(request.form['payload'])
+        help_request_data = schemas.HelpRequestCreateSchema().load(payload)
         help_request = schemas.HelpRequestSchema().load(help_request_data)
         db.session.add(help_request)
         db.session.commit()
