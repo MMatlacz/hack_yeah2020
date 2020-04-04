@@ -1,12 +1,13 @@
-import json
-
 from typing import (
     Any,
     Callable,
     ClassVar,
 )
 
-from flask import Response
+from flask import (
+    Response,
+    json,
+)
 
 from typing_extensions import Final
 
@@ -18,13 +19,13 @@ class JSONResponse(Response):
 
     Attributes
     ----------
-    json_decoder
-        callable used to decode request's data to JSON payload
+    json_encoder
+        callable used to encode request's data to JSON payload
 
     """
 
     default_mimetype: ClassVar[str] = JSON_MEDIA_TYPE
-    json_decoder: ClassVar[Callable] = staticmethod(json.dumps)  # noqa: WPS421
+    json_encoder: ClassVar[Callable] = staticmethod(json.dumps)  # noqa: WPS421
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -34,7 +35,7 @@ class JSONResponse(Response):
         is_json_media_type = self.headers['Content-Type'] == JSON_MEDIA_TYPE
         already_decoded_types = (str, bytes, bytearray)
         if is_json_media_type and not isinstance(value, already_decoded_types):
-            value = self.json_decoder(value)
+            value = self.json_encoder(value)
         super().set_data(value)
 
     data = property(
