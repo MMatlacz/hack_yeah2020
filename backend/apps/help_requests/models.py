@@ -19,11 +19,12 @@ MAX_LENGTH: Final[int] = 255
 
 
 class HelpRequest(Timestampable, UUIDable):
-    first_name = Column(String(length=MAX_LENGTH), nullable=False)
-    last_name = Column(String(length=MAX_LENGTH), nullable=False)
+    full_name = Column(String(length=MAX_LENGTH), nullable=False)
     phone_number = Column(PhoneNumberType(region='PL', max_length=MAX_LENGTH))
     address = Column(String(length=MAX_LENGTH), nullable=False)
-    things = Column(Text, nullable=False)
+    products = Column(Text, nullable=False)
+    pickup_time = Column(String(length=MAX_LENGTH), nullable=False)
+    call_time = Column(String(length=MAX_LENGTH), nullable=False)
     finished_at = Column(DateTime, default=None, nullable=True)
     accepted_at = Column(DateTime, default=None, nullable=True)
 

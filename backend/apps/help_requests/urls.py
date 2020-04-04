@@ -11,5 +11,5 @@ help_requests_app.add_url_rule(
 help_requests_app.add_url_rule(
     '/',
     'help_requests-list',
-    views.HelpRequestListView.as_view('help_requests-list'),
+    views.HelpRequestCreateListView.as_view('help_requests-list'),
 )
