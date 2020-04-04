@@ -11,6 +11,7 @@ from flask_jwt_extended import create_access_token
 from freezegun import freeze_time
 
 from apps.help_requests import models
+from apps.help_requests.geocoding import GeoCodingResult
 
 
 @pytest.mark.flask_db
@@ -102,6 +103,7 @@ class TestHelpRequestListView:
 
     def test_post_returns_HTTP201_with_created_help_request_data(
         self,
+        mocker,
         client,
         user,
     ):
@@ -115,6 +117,15 @@ class TestHelpRequestListView:
                 'dzisiaj wieczorem po 19:35, ale nie pózniej niz o 21:21'
             ),
         }
+        geocoding_result = GeoCodingResult(
+            help_request_data['address'],
+            52.222706,
+            21.007007,
+        )
+        mocker.patch(
+            'apps.help_requests.schemas.geolocation_from',
+            return_value=geocoding_result,
+        )
         response = client.post(
             url_for(self.view_name, _external=False),
             json=help_request_data,
@@ -126,6 +137,9 @@ class TestHelpRequestListView:
         ).one()
         assert help_request.products == help_request_data['products']
         assert help_request.full_name == help_request_data['name']
+        assert help_request.address == geocoding_result.address
+        assert help_request.latitude == geocoding_result.latitude
+        assert help_request.longitude == geocoding_result.longitude
 
 
 @pytest.mark.flask_db

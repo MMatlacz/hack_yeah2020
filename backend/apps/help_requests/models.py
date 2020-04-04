@@ -1,6 +1,7 @@
 from sqlalchemy import (
     Column,
     DateTime,
+    Float,
     ForeignKey,
     String,
     Text,
@@ -21,6 +22,8 @@ class HelpRequest(Timestampable, UUIDable):
     full_name = Column(String(length=MAX_LENGTH), nullable=False)
     phone_number = Column(String(length=MAX_LENGTH), nullable=False)
     address = Column(String(length=MAX_LENGTH), nullable=False)
+    longitude = Column(Float, nullable=True)
+    latitude = Column(Float, nullable=True)
     products = Column(Text, nullable=False)
     pickup_time = Column(String(length=MAX_LENGTH), nullable=False)
     call_time = Column(String(length=MAX_LENGTH), nullable=False)

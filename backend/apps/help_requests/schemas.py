@@ -1,7 +1,11 @@
-from marshmallow import fields
+from marshmallow import (
+    fields,
+    post_load,
+)
 
 from ..extensions import schemas
 from . import models
+from .geocoding import geolocation_from
 
 
 class HelpRequestSchema(schemas.ModelSchema):
@@ -17,6 +21,8 @@ class HelpRequestSchema(schemas.ModelSchema):
             'full_name',
             'phone_number',
             'address',
+            'latitude',
+            'longitude',
             'products',
             'pickup_time',
             'call_time',
@@ -41,12 +47,19 @@ class HelpRequestSchema(schemas.ModelSchema):
 
 
 class HelpRequestCreateSchema(schemas.Schema):
-    address = fields.String(required=True)
-    full_name = fields.String(required=True, data_key='name')
-    products = fields.String(required=True)
-    call_time = fields.String(required=True, default='')
-    pickup_time = fields.String(required=True)
-    phone_number = fields.String(required=True)
+    address = fields.String(required=True, load_only=True)
+    full_name = fields.String(required=True, load_only=True, data_key='name')
+    products = fields.String(required=True, load_only=True)
+    call_time = fields.String(required=True, load_only=True, default='')
+    pickup_time = fields.String(required=True, load_only=True)
+    phone_number = fields.String(required=True, load_only=True)
+
+    @post_load
+    def make_object(self, data, **kwargs):
+        data.update(
+            geolocation_from(data['address'])._asdict(),  # noqa: WPS437
+        )
+        return data
 
 
 class HelpRequestPartialUpdateSchema(HelpRequestSchema):
@@ -56,6 +69,8 @@ class HelpRequestPartialUpdateSchema(HelpRequestSchema):
             'full_name',
             'phone_number',
             'address',
+            'latitude',
+            'longitude',
             'products',
             'pickup_time',
             'call_time',
