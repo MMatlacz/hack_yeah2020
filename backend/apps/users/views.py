@@ -26,7 +26,7 @@ class UserCreateView(APIView):
         db.session.add(user)
         db.session.commit()
         return JSONResponse(
-            schemas.UserSchema(exclude=('password',)).dump(user),
+            {'data': schemas.UserSchema(exclude=('password',)).dump(user)},
             HTTPStatus.CREATED,
             headers={
                 'Location': url_for('.user-detail', user_id=str(user.id)),
@@ -46,6 +46,6 @@ class UserRetrieveView(APIView):
             # message
             user = models.User.query.get(user_id)
         return JSONResponse(
-            schemas.UserSchema().dump(user),
+            {'data': schemas.UserSchema().dump(user)},
             HTTPStatus.OK,
         )

@@ -20,6 +20,7 @@ TESTING = False
 # BLUEPRINTS
 INSTALLED_BLUEPRINTS = (
     'apps.auth:auth_app',
+    'apps.help_requests',
     'apps.users',
 )
 
@@ -71,7 +72,8 @@ JWT_IDENTITY_CLAIM = 'sub'
 JWT_ERROR_MESSAGE_KEY = 'detail'
 JWT_JSON_KEY = 'access_token'
 JWT_BLACKLIST_ENABLED = False
-AUTH_USER_MODEL = 'users_user'
+AUTH_USER_TABLE = 'users_user'
+AUTH_USER_MODEL = 'apps.users.models.User'
 
 
 # CELERY

@@ -12,6 +12,7 @@ from apps.application import create_app
 from apps.extensions import db as database
 
 FACTORIES_MODULE_PATHS = (
+    'apps.help_requests.factories',
     'apps.users.factories',
 )
 
@@ -112,3 +113,8 @@ def transaction_free_session(db, request):
     db.session.remove()
     db.drop_all()
     db.create_all()
+
+
+@pytest.fixture(scope='session')
+def faker_locale():
+    return 'pl_PL'

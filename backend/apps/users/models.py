@@ -5,6 +5,7 @@ from sqlalchemy import (
     Column,
     String,
 )
+from sqlalchemy.orm import relationship
 from sqlalchemy_utils import (
     EmailType,
     PasswordType,
@@ -38,3 +39,8 @@ class User(Timestampable, UUIDable):
         unique=False,
     )
     is_active = Column(Boolean, default=True)
+
+    accepted_help_requests = relationship(
+        'apps.help_requests.models.HelpRequest',
+        back_populates='accepted_by',
+    )
