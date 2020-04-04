@@ -11,8 +11,8 @@ from flask_socketio import (
 from typing_extensions import Final
 
 BLUEPRINT_RELATIVE_IMPORTS: Final = (
-    ('.urls', '.views'),
     ('.models',),
+    ('.urls', '.views'),
     ('.routing', '.consumers'),
     ('.hooks',),
     ('.exceptions',),

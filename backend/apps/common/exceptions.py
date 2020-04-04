@@ -1,18 +1,25 @@
 from http import HTTPStatus
 
-from flask import (
-    Response,
-    current_app,
-    json,
-)
+from flask import current_app
 
 from marshmallow import ValidationError
+from sqlalchemy.orm.exc import NoResultFound
+
+from .wrappers.response import JSONResponse
 
 
 @current_app.errorhandler(ValidationError)
-def handle_marshmallow_ValidationError(exception: ValidationError) -> Response:
-    return Response(
-        json.dumps(exception.normalized_messages()),
+def handle_marshmallow_ValidationError(
+    exception: ValidationError,
+) -> JSONResponse:
+    return JSONResponse(
+        exception.normalized_messages(),
         HTTPStatus.BAD_REQUEST,
-        headers={'Content-Type': 'application/json'},
     )
+
+
+@current_app.errorhandler(NoResultFound)
+def handle_sqlalchemy_orm_NoResultFound(
+    exception: NoResultFound,
+) -> JSONResponse:
+    return JSONResponse({'message': 'Not found'}, HTTPStatus.NOT_FOUND)
