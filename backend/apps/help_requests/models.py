@@ -29,6 +29,7 @@ class HelpRequest(Timestampable, UUIDable):
     call_time = Column(String(length=MAX_LENGTH), nullable=False)
     finished_at = Column(DateTime, default=None, nullable=True)
     accepted_at = Column(DateTime, default=None, nullable=True)
+    recording_url = Column(String(length=MAX_LENGTH), nullable=True)
 
     accepted_by_id = Column(
         UUID(as_uuid=True),

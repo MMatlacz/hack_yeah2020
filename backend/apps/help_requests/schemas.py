@@ -1,3 +1,7 @@
+import os
+
+from urllib.parse import urljoin
+
 from marshmallow import (
     fields,
     post_load,
@@ -24,6 +28,7 @@ class HelpRequestSchema(schemas.ModelSchema):
             'latitude',
             'longitude',
             'products',
+            'recording_url',
             'pickup_time',
             'call_time',
             'finished_at',
@@ -53,6 +58,11 @@ class HelpRequestCreateSchema(schemas.Schema):
     call_time = fields.String(required=True, load_only=True, default='')
     pickup_time = fields.String(required=True, load_only=True)
     phone_number = fields.String(required=True, load_only=True)
+    recording_url = fields.Method(deserialize='load_recording_url')
+
+    def load_recording_url(self, value):  # noqa: WPS110
+        path = '{0}.mp3'.format(os.path.splitext(value)[0])
+        return urljoin('https://api.twilio.com', path)
 
     @post_load
     def make_object(self, data, **kwargs):
@@ -76,6 +86,7 @@ class HelpRequestPartialUpdateSchema(HelpRequestSchema):
             'latitude',
             'longitude',
             'products',
+            'recording_url',
             'pickup_time',
             'call_time',
             'created_at',

@@ -15,6 +15,7 @@ def create_app(config_module_path: str = '') -> flask.Flask:
     )
     flask_app = flask.Flask(__name__)
     flask_app.config.from_object(config_module_path)
+    flask_app.url_map.strict_slashes = False
 
     _register_extensions(flask_app)
 

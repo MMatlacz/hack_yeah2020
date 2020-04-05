@@ -1,11 +1,7 @@
-import phonenumbers
+from flask import flash
 
+from flask_admin.actions import action
 from flask_admin.contrib.sqla import ModelView
-from wtforms.fields import StringField
-from wtforms.validators import (
-    DataRequired,
-    ValidationError,
-)
 
 from apps.extensions import (
     admin,
@@ -15,23 +11,37 @@ from apps.extensions import (
 from . import models
 
 
-def is_valid_phone_number(form, field):
-    try:
-        parsed_phone_number = phonenumbers.parse(field.data)
-    except (phonenumbers.phonenumberutil.NumberParseException) as exc:
-        raise ValidationError(str(exc))
-    else:
-        if not phonenumbers.is_valid_number(parsed_phone_number):
-            raise ValidationError('Invalid phone number')
-
-
 class HelpRequestModelView(ModelView):
-    form_extra_fields = {
-        'phone_number': StringField(
-            'Phone Number',
-            validators=[DataRequired(), is_valid_phone_number],
+    column_display_pk = True
+
+    @action(
+        'clear_accepted_by',
+        'Clear accepted_by',
+        (
+            'Are you sure you want to clear `accepted_by` field for '
+            + 'selected help requests?'
         ),
-    }
+    )
+    def clear_accepted_by(self, ids):
+        try:
+            self.session.bulk_update_mappings(
+                self.model,
+                [
+                    {'id': user_id, 'accepted_by_id': None, 'accepted_at': None}
+                    for user_id in ids
+                ],
+            )
+            self.session.flush()
+            self.session.commit()
+            flash(
+                f'Successfully cleared accepted_by of {len(ids)} help requests',
+                'success',
+            )
+        except Exception as exc:
+            if not self.handle_view_exception(exc):
+                raise
+
+            flash(f'Failed to clear approved_by. {exc}', 'error')
 
 
 admin.add_view(HelpRequestModelView(models.HelpRequest, db.session))

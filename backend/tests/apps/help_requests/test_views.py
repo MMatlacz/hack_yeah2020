@@ -119,6 +119,11 @@ class TestHelpRequestListView:
             'pickup_time': (
                 'dzisiaj wieczorem po 19:35, ale nie pózniej niz o 21:21'
             ),
+            'recording_url': (
+                '/2010-04-01/Accounts/AC5c58a7435d00847118556e5d9d23fd68/'
+                + 'Calls/CA92a85f4890dd2bafc3ee903eccce3c5c/Recordings/'
+                + 'REfb609411c0fd2c78b2af9be40bdfa23d.json'
+            ),
         }
         geocoding_result = GeoCodingResult(
             help_request_data['address'],
@@ -143,6 +148,8 @@ class TestHelpRequestListView:
         assert help_request.address == geocoding_result.address
         assert help_request.latitude == geocoding_result.latitude
         assert help_request.longitude == geocoding_result.longitude
+        assert help_request.recording_url.startswith('https://api.twilio.com/')
+        assert help_request.recording_url.endswith('.mp3')
 
 
 @pytest.mark.flask_db
