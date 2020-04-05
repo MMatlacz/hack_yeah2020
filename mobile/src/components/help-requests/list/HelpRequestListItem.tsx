@@ -10,14 +10,14 @@ class HelpRequestExpandedBody extends React.Component<HelpListItemProps> {
 
     constructor(props) {
         super(props);
-        this.takeHelpRequest = this.takeHelpRequest.bind(this);
     }
 
-    takeHelpRequest() {
+    takeHelpRequest = () => {
         const navigation = this.props.navigation;
-        this.context.assignForHelp(this.props.helpRequest.id).then(() => {
-            navigation.navigate("HelpSummary", {requestID: this.props.helpRequest.id});
-        });
+        //console.log("take help requests");
+        //this.context.assignForHelp(this.props.helpRequest.id).then(() => {
+        navigation.navigate("HelpSummary", {requestID: this.props.helpRequest.id});
+        //});
     }
 
     render() {
@@ -35,7 +35,7 @@ class HelpRequestExpandedBody extends React.Component<HelpListItemProps> {
                 </View>
                 <View style={{flex: 1, flexDirection: "row", justifyContent: "space-around"}}>
                     <Button style={flexItemStyle} onPress={this.takeHelpRequest}>
-                        <Text style={{textAlign: 'center'}}>Robię zakupy!</Text>
+                        <Text style={{textAlign: 'center'}}>Pomagam!</Text>
                     </Button>
                 </View>
             </View>

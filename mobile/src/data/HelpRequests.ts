@@ -81,6 +81,7 @@ class HelpRequestsService {
             created_at: new Date(Date.parse( request.created_at)),
             pickup_time: request.pickup_time,
             phone_number: request.phone_number,
+            recording_url: request.recording_url,
             address: {
                 address: request.address,
                 longitude: request.longitude,

@@ -21,16 +21,19 @@ import MapView from "react-native-maps";
 import HelpRequestProducts from "../../components/help-requests/common/HelpRequestProducts";
 import HelpRequestMiniMap from "../../components/help-requests/mapp/MiniMap";
 import {View} from "react-native";
+import { Audio } from 'expo-av';
 
 export default class HelpRequestSummary extends React.Component<HelpRequestSummaryProps> {
     static contextType = HelpRequestsServiceContext;
+    soundObject = new Audio.Sound();
 
     constructor(props: HelpRequestSummaryProps) {
         super(props);
         this.state = {
             isLoading: true,
             requestID: this.props.route.params.requestID,
-            helpRequest: null
+            helpRequest: null,
+            playing: false
         }
         this.componentDidMount = this.componentDidMount.bind(this);
     }
@@ -41,12 +44,54 @@ export default class HelpRequestSummary extends React.Component<HelpRequestSumma
         });
     }
 
+    async componentWillUnmount() {
+        if(this.state.playing) {
+            await this.soundObject.stopAsync();
+            this.setState({
+                playing: false
+            });
+            return;
+        }        
+    }
+
+    takeHelpRequest = async () => {
+        await this.context.assignForHelp(this.state.requestID);
+    }
+
+    playAudio = async () => {
+        if(this.state.playing) {
+            this.soundObject.stopAsync();
+            this.setState({
+                playing: false
+            });
+            return;
+        }
+        try {
+          console.log(this.state.helpRequest.recording_url);
+          this.setState({
+              playing: true
+          });
+          await this.soundObject.loadAsync({ uri: this.state.helpRequest.recording_url });
+          await this.soundObject.playAsync();          
+        } catch (error) {
+          console.log(error);
+        }        
+    }
+
     render() {
         if(this.state.isLoading) {
             return <AppLoading/>;
         }
 
-        console.log(this.state.helpRequest.phone_number)
+        let recording = null;
+        if(this.state.helpRequest.recording_url) {
+            recording = <View style={styles.contentItem}>
+                <Button onPress={this.playAudio}>
+                    <Text>{ !this.state.playing ? 'Odtwórz nagranie' : 'Zatrzymaj nagranie' }</Text>
+                </Button>
+            </View>;
+        }
+        console.log(this.state.helpRequest.recording_url)
 
         return <Container>
             <Header>
@@ -63,16 +108,19 @@ export default class HelpRequestSummary extends React.Component<HelpRequestSumma
                     </View>
 
                     <View style={styles.contentItem}>
-                        <Icon name={"old-phone"} type={"Entypo"}/><H3>Kontakt </H3>
+                        <H3><Icon name={"old-phone"} type={"Entypo"}/>  Kontakt:</H3>
                         <Text> {this.state.helpRequest.phone_number} </Text>
                     </View>
+
+                    {recording}
+
                     <HelpRequestProducts helpRequest={this.state.helpRequest} checkBox={true} style={styles.contentItem}/>
                 </Container>
             </Content>
             <Footer>
                 <FooterTab>
-                    <Button active={true} onPress={() => {}}>
-                        <Text>Dowieziono!</Text>
+                    <Button active={true} onPress={this.state.takeHelpRequest}>
+                        <Text>Zrealizowano!</Text>
                     </Button>
                 </FooterTab>
             </Footer>

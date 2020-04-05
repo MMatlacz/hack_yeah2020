@@ -4,7 +4,7 @@ import React from "react";
 class HelpRequestProducts extends React.Component<HelpRequestProductsProps> {
     render() {
         return <View>
-            <H3>Lista zakupów</H3>
+            <H3>Zapotrzebowanie</H3>
             <List>
                 { this.props.helpRequest.products.map((product) => {
                    return (

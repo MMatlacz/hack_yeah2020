@@ -3,7 +3,7 @@ import {NavigationContainer} from "@react-navigation/native";
 import { createStackNavigator } from '@react-navigation/stack';
 
 import 'react-native-gesture-handler';
-
+import { YellowBox } from 'react-native';
 import Main from "./src/views/help-requests/main";
 import LogIn from "./src/views/user/LogIn";
 import {AppLoading} from "expo";
@@ -28,6 +28,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount(): void {
+    console.disableYellowBox = true;
     this.getUserService().fetchLocalUser();
 
     // use it to turn off cache of user

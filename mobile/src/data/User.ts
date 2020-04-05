@@ -27,7 +27,7 @@ class UserService {
     }
 
     async registerUser(userRequest: UserRequest) {
-        let response = await fetch(this.apiURL + '/users', {
+        let response = await fetch(this.apiURL + '/users/', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -37,7 +37,7 @@ class UserService {
         });
 
         if (response.status != 201) {
-            console.error(response);
+            throw await response.text();
         }
 
         return await this.logIn(userRequest.email, userRequest.password);
@@ -56,7 +56,7 @@ class UserService {
         });
 
         if (response.status != 200){
-            response.json().then(console.error).catch(() => console.error('couldn read response data'));
+            throw await response.text();
         }
 
         const body = await response.json();

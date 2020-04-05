@@ -5,10 +5,11 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import * as Font from 'expo-font';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Callout, CalloutSubview } from 'react-native-maps';
 import { Container, Header, Content, Card, CardItem, Text, Icon, Right, List, ListItem, Button, Switch, Separator, Title, Form, Item, Input, Left, Label, Body, Footer, FooterTab, Spinner, H1, H2, H3 } from 'native-base';
 import HelpRequestListComponent from "../../components/help-requests/list";
 import HelpRequestsServiceContext from '../../contexts/helpRequestsService';
+import { Audio } from 'expo-av';
 
 const permissions : Permissions.PermissionType[] = [
     Permissions.LOCATION,
@@ -50,6 +51,7 @@ export default class Main extends React.Component {
     }
 
     componentDidMount = async () => {
+        await Audio.requestPermissionsAsync();
         const hasPermissions = await checkPermissions();
         await Font.loadAsync({
             Roboto: require('native-base/Fonts/Roboto.ttf'),
@@ -64,7 +66,7 @@ export default class Main extends React.Component {
             hasPermissions
         });
         this.fetchHelpRequests();
-        this.interval = setInterval(this.fetchHelpRequests, 1000);
+        this.interval = setInterval(this.fetchHelpRequests, 5000);
     }
 
     componentWillUnmount = () => {
@@ -121,10 +123,22 @@ export default class Main extends React.Component {
     renderMap = () => {
         let selfMarker = null;
         if(this.state.location) {
-            selfMarker = <Marker coordinate={this.state.location}></Marker>;
+            selfMarker = <Marker pinColor='blue' coordinate={this.state.location}></Marker>;
         }
         return  <Content><MapView ref={map => { this.map = map }} style={styles.mapStyle} initialRegion={this.initialRegion} onRegionChange={this.onRegionChange}>
             {selfMarker}
+            {this.state.entries.map((entry) => {
+               return <Marker coordinate={{latitude: entry.address.latitude, longitude: entry.address.longitude}} key={entry.id}>
+                    <Callout onPress={
+                        () => {
+                            this.props.navigation.navigate("HelpSummary", {requestID: entry.id});
+                        }
+                    }>
+                        <Text>{entry.full_name}</Text>
+                        <Text>{entry.address.address}</Text>
+                    </Callout>
+                </Marker> 
+            })}
         </MapView></Content>
     }
 
@@ -133,11 +147,6 @@ export default class Main extends React.Component {
             return <AppLoading/>;
         }
         return <Container>
-            <Header>
-                <Body>
-                    <Title>{this.state.showMap ? 'Map' : 'List'}</Title>
-                </Body>
-            </Header>
             { this.state.showMap ? this.renderMap() : <HelpRequestListComponent requests={this.state.entries} navigation={this.props.navigation}/> }
             <Footer>
                 <FooterTab>
