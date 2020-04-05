@@ -123,7 +123,11 @@ export default class Main extends React.Component {
     renderMap = () => {
         let selfMarker = null;
         if(this.state.location) {
-            selfMarker = <Marker pinColor='blue' coordinate={this.state.location}></Marker>;
+            selfMarker = <Marker pinColor='blue' coordinate={this.state.location}>
+                <Callout>
+                    <Text>Your location</Text>
+                </Callout>
+            </Marker>;
         }
         return  <Content><MapView ref={map => { this.map = map }} style={styles.mapStyle} initialRegion={this.initialRegion} onRegionChange={this.onRegionChange}>
             {selfMarker}
