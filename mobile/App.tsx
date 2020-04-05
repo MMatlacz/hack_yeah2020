@@ -9,6 +9,8 @@ import LogIn from "./src/views/user/LogIn";
 import {AppLoading} from "expo";
 import UserService from "./src/data/User";
 import HelpRequestsService from "./src/data/HelpRequests";
+import HelpRequestSummary from './src/views/help-requests/Summary';
+import HelpRequestsServiceContext from './src/contexts/helpRequestsService';
 
 
 const Stack = createStackNavigator();
@@ -51,19 +53,22 @@ export default class App extends React.Component {
   }
 
   render = () => {
+
+
     if(this.isLoading()) {
       return <AppLoading/>;
     }
 
     if (this.state.user && this.state.user.access_token) {
       return (
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="Home"  >
-              {props => <Main {...props} helpRequestsService={this.getHelpRequestsService()} />}
-            </Stack.Screen>
-          </Stack.Navigator>
-        </NavigationContainer>
+          <HelpRequestsServiceContext.Provider value={this.getHelpRequestsService()}>
+            <NavigationContainer>
+              <Stack.Navigator initialRouteName="Home">
+                <Stack.Screen name="Home" component={Main} />
+                <Stack.Screen name="HelpSummary" component={HelpRequestSummary}/>
+              </Stack.Navigator>
+            </NavigationContainer>
+          </HelpRequestsServiceContext.Provider>
       )
     } else {
       return (

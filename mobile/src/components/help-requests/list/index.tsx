@@ -8,7 +8,7 @@ class HelpRequestListComponent extends React.Component<HelpRequestListComponentP
             <Content>
                 <List>
                     {this.props.requests.map((request) => (
-                        <HelpRequestListItem helpRequest={request} key={request.id}>
+                        <HelpRequestListItem helpRequest={request} key={request.id} navigation={this.props.navigation}>
                         </HelpRequestListItem>
                     ))}
                 </List>
@@ -19,6 +19,7 @@ class HelpRequestListComponent extends React.Component<HelpRequestListComponentP
 
 type HelpRequestListComponentProps = {
     requests: HelpRequest[]
+    navigation: any
 }
 
 export default HelpRequestListComponent;

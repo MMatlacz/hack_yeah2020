@@ -8,6 +8,7 @@ import * as Font from 'expo-font';
 import MapView, { Marker } from 'react-native-maps';
 import { Container, Header, Content, Card, CardItem, Text, Icon, Right, List, ListItem, Button, Switch, Separator, Title, Form, Item, Input, Left, Label, Body, Footer, FooterTab, Spinner, H1, H2, H3 } from 'native-base';
 import HelpRequestListComponent from "../../components/help-requests/list";
+import HelpRequestsServiceContext from '../../contexts/helpRequestsService';
 
 const permissions : Permissions.PermissionType[] = [
     Permissions.LOCATION,
@@ -24,13 +25,7 @@ async function checkPermissions() {
 }
 
 export default class Main extends React.Component {
-    state = {
-        hasPermissions: false,
-        loaded: false,
-        location: null,
-        showMap: false,
-        entries: []
-    }
+    static contextType = HelpRequestsServiceContext;
 
     initialRegion = {
         latitude: 52.2297,
@@ -41,6 +36,18 @@ export default class Main extends React.Component {
 
     locationCallback: any = null;
     map: MapView | null = null;
+
+    constructor(props) {
+        super(props);
+        this.state ={
+            hasPermissions: false,
+            loaded: false,
+            location: null,
+            showMap: false,
+            entries: []
+        };
+        this.fetchHelpRequests = this.fetchHelpRequests.bind(this);
+    }
 
     componentDidMount = async () => {
         const hasPermissions = await checkPermissions();
@@ -56,19 +63,27 @@ export default class Main extends React.Component {
             loaded: true,
             hasPermissions
         });
-
-        this.props.helpRequestsService.getHelpRequests().then(
-            (requests) => {
-                this.setState({
-                    entries: requests
-                });
-            }
-        ).catch(console.error);
+        this.fetchHelpRequests();
+        this.interval = setInterval(this.fetchHelpRequests, 1000);
     }
 
     componentWillUnmount = () => {
         if (this.locationCallback)
             this.locationCallback.remove();
+
+        if (this.interval ) {
+            clearInterval(this.interval);
+        }
+    }
+
+    fetchHelpRequests () {
+        this.context.getHelpRequests().then(
+            (requests: HelpRequest[]) => {
+                this.setState({
+                    entries: requests
+                });
+            }
+        ).catch(console.error);
     }
 
     onLocationUpdate = (location: any) => {
@@ -103,10 +118,6 @@ export default class Main extends React.Component {
 
     }
 
-    renderList = () => {
-        return <HelpRequestListComponent requests={this.state.entries}/>
-    }
-
     renderMap = () => {
         let selfMarker = null;
         if(this.state.location) {
@@ -127,7 +138,7 @@ export default class Main extends React.Component {
                     <Title>{this.state.showMap ? 'Map' : 'List'}</Title>
                 </Body>
             </Header>
-            { this.state.showMap ? this.renderMap() : this.renderList() }
+            { this.state.showMap ? this.renderMap() : <HelpRequestListComponent requests={this.state.entries} navigation={this.props.navigation}/> }
             <Footer>
                 <FooterTab>
                     <Button active={!this.state.showMap} onPress={() => { this.setState({showMap: false})}}>
