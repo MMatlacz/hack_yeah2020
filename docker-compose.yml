@@ -5,9 +5,11 @@ services:
   db:
     image: postgres:latest
     volumes:
-      - hack_yeah2020-postgresql:/var/lib/postgresql/data
+      - hack_yeah2020-postgresql:/var/lib/postgresql/data:cached
     env_file:
       - .envs/postgresql
+    ports:
+      - "5432:5432"
     environment:
       # set `${PGDATA}` to a subdirectory because PostgreSQL needs this
       # directory to be empty and there is already `.gitkeep` file there
